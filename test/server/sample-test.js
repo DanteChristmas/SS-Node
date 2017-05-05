@@ -1,15 +1,12 @@
 process.env.NODE_ENV = 'test';
+const knex = require('../../server/db/connection');
 
-const chai = require('chai');
-const should = chai.should();
+beforeEach(() => {
+  return knex.migrate.rollback()
+  .then(() => { return knex.migrate.latest(); })
+  .then(() => { return knex.seed.run(); })
+});
 
-describe('mocha:chai tests', () => {
-
-  describe('the test runner', () => {
-    it('should be able to pass a simple test', (done) => {
-      const cat = 'cat';
-      cat.should.eql('cat');
-      done();
-    });
-  });
+afterEach(() => {
+  return knex.migrate.rollback();
 });

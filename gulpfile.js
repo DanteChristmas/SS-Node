@@ -59,3 +59,11 @@ gulp.task('watch', () => {
     });
   }));
 });
+
+gulp.task('test', () => {
+  return gulp.src(['test/server/**/*.js', 'test/server/*.js'])
+  .pipe(mocha({reporter: 'list'}))
+  .on('error', (err) => {
+    console.log(err.stack);
+  });
+});
