@@ -1,5 +1,5 @@
 process.env.NODE_ENV = 'test';
-const knex = require('../../server/db/connection');
+const knex = require('../../../server/db/connection');
 
 beforeEach(() => {
   return knex.migrate.rollback()

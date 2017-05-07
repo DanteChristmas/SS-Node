@@ -15,23 +15,23 @@ function ApiRoutes(config) {
     const routeVersion = isSet(config.version) ? config.version + '/' : '';
 
     router.get(`/${routeVersion}${config.route}`, (req, res, next) => {
-      controller.query(req, res);
+      controller.query(req, res, next);
     });
 
     router.get(`/${routeVersion}${config.route}/:id`, (req, res, next) => {
-      controller.find(req, res);
+      controller.find(req, res, next);
     });
 
     router.post(`/${routeVersion}${config.route}`, (req, res, next) => {
-      controller.create(req, res);
+      controller.create(req, res, next);
     });
 
     router.put(`/${routeVersion}${config.route}/:id`, (req, res, next) => {
-      controller.update(req, res);
+      controller.update(req, res, next);
     });
 
     router.delete(`/${routeVersion}${config.route}/:id`, (req, res, next) => {
-      controller.del(req, res);
+      controller.del(req, res, next);
     });
 
     return router;

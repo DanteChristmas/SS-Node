@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('products', (table) => {
-    table.uuid('id');
+    table.uuid('id').notNullable().unique().primary();
     table.enu('type', ['STRAP', 'MERCH', 'APPAREL']).notNullable().defaultTo('STRAP');
     table.bool('available').notNullable().defaultTo(false);
     table.string('name');
@@ -12,5 +12,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-
+  return knex.schema.dropTable('products');
 };

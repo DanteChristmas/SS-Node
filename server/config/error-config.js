@@ -10,9 +10,9 @@ const path = require('path');
       next(err);
     });
 
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
       app.use(function(err, req, res, next) {
-        res.status(err.status || 500).send({
+        res.status(err.status || 500).json({
           message: err.message,
           error: err
         });
