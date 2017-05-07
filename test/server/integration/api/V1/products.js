@@ -30,7 +30,7 @@ describe('product API V1 routes', () => {
     });
   });
 
-  describe('GET /products', () => {
+  describe('GET /products/:id', () => {
     it('should find a product for a given id', (done) => {
       chai.request(server)
       .get('/api/v1/products')
