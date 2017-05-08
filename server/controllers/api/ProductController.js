@@ -1,9 +1,10 @@
 const knex = require('../../db/connection.js');
+const uuid = require('uuid/v4');
 
 function query(req, res, next) {
   knex.select().from('products')
   .then((data) => {
-    handleResponse(res, 200, 'success', data, {});
+    handleResponse(res, 200, 'success', data , {});
   })
   .catch((err) => {
     next(err);
@@ -27,19 +28,43 @@ function find(req, res, next) {
 }
 
 function create(req, res, next) {
-  handleResponse(res, 200, 'success');
+  var newProduct = req.body;
+  newProduct.id = uuid();
+  knex('products').insert(newProduct)
+  .returning('*')
+  .then((data) => {
+    handleResponse(res, 200, 'success', data[0], {});
+  })
+  .catch((err) => {
+    next(err);
+  });
 }
 
 function update(req, res, next) {
-  handleResponse(res, 200, 'success');
+  var updateProduct = req.body;
+  updateProduct.updated_at = new Date().toISOString();
+  knex('products').where({id: req.body.id}).update(updateProduct)
+  .returning('*')
+  .then((data) => {
+    handleResponse(res, 200, 'success', data[0], {});
+  })
+  .catch((err) => {
+    next(err);
+  });
 }
 
 function del(req, res) {
-  handleResponse(res, 200, 'success');
+  knex.delete().from('products').where({ id: req.params.id })
+  .then((data) => {
+    handleResponse(res, 200, 'success', {message: 'Delete Successful'}, {});
+  })
+  .catch((err) => {
+    next(err);
+  });
 }
 
 function handleResponse(res, code, statusMsg, data, meta) {
-  res.status(code).json({ status: statusMsg, content: data, meta: {} });
+  res.status(code).json({ status: statusMsg, content: data , meta: {} });
 }
 
 module.exports = {
