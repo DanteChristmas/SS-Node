@@ -28,6 +28,83 @@ describe('product API V1 routes', () => {
         done();
       });
     });
+
+    it('should filter products by type', (done) => {
+      chai.request(server)
+      .get('/api/v1/products?types=STRAP')
+      .end((err, res) => {
+        should.not.exist(err);
+        res.status.should.eql(200);
+        for(var i = 0; i < res.body.content.length; i++) {
+          res.body.content[i].type.should.eql('STRAP');
+        }
+        done();
+      });
+    });
+
+    it('should filter products by availability', (done) => {
+      chai.request(server)
+      .get('/api/v1/products?available=true')
+      .end((err, res) => {
+        should.not.exist(err);
+        res.status.should.eql(200);
+        for(var i = 0; i < res.body.content.length; i++) {
+          res.body.content[i].available.should.be.true;
+        }
+        chai.request(server)
+        .get('/api/v1/products?available=false')
+        .end((err, res) => {
+          should.not.exist(err);
+          res.status.should.eql(200);
+          for(var i = 0; i < res.body.content.length; i++) {
+            res.body.content[i].available.should.be.false;
+          }
+          done();
+        });
+      });
+    });
+
+    it('should filter by min_price', (done) => {
+      chai.request(server)
+      .get('/api/v1/products?min_price=50.00')
+      .end((err, res) => {
+        should.not.exist(err);
+        res.status.should.eql(200);
+        for(var i = 0; i < res.body.content.length; i++) {
+          res.body.content[i].price.should.be.at.least(50.00);
+        }
+        done();
+      });
+    });
+
+    it('should filter by max_price', (done) => {
+      chai.request(server)
+      .get('/api/v1/products?max_price=50.00')
+      .end((err, res) => {
+        should.not.exist(err);
+        res.status.should.eql(200);
+        for(var i = 0; i < res.body.content.length; i++) {
+          res.body.content[i].price.should.be.at.most(50.00)
+        }
+        done();
+      });
+    });
+
+    if('should handle filtering by multiple things', (done) => {
+      chai.request(server)
+      .get('/api/v1/products?types=STRAP&available=true&min_price=35.00&max_price=121.00')
+      .end((err, res) => {
+        should.not.exist(err);
+        res.status.should.eql(200);
+        for(var i = 0; i < res.body.content.length; i++) {
+          res.body.content[i].type.should.eql('STRAP');
+          res.body.content[i].available.should.be.true;
+          res.body.content[i].price.should.be.at.least(35.00);
+          res.body.content[i].price.should.be.at.most(121.00);
+        }
+        done();
+      });
+    });
   });
 
   describe('GET /products/:id', () => {
@@ -36,7 +113,7 @@ describe('product API V1 routes', () => {
       .get('/api/v1/products')
       .end((err, res) => {
         should.not.exist(err);
-        const id = res.body.content[0].id;
+        const id = res.body.content[0]._id;
         chai.request(server)
         .get(`/api/v1/products/${id}`)
         .end((err, res) => {
@@ -45,7 +122,7 @@ describe('product API V1 routes', () => {
           res.status.should.eql(200);
           res.type.should.eql('application/json');
           res.body.status.should.eql('success');
-          res.body.content.id.should.eql(id);
+          res.body.content._id.should.eql(id);
           done();
         });
       })
@@ -128,7 +205,7 @@ describe('product API V1 routes', () => {
         product.price = '5.11';
         product.available = true;
         chai.request(server)
-        .put(`/api/v1/products/${product.id}`)
+        .put(`/api/v1/products/${product._id}`)
         .send(product)
         .end((err, res) => {
           should.not.exist(err);
@@ -137,7 +214,7 @@ describe('product API V1 routes', () => {
           res.type.should.eql('application/json');
           res.body.status.should.eql('success');
           res.body.meta.should.exist;
-          res.body.content.id.should.eql(product.id);
+          res.body.content._id.should.eql(product._id);
           res.body.content.name.should.eql(product.name);
           res.body.content.type.should.eql(product.type);
           res.body.content.price.should.eql(product.price);
@@ -158,7 +235,7 @@ describe('product API V1 routes', () => {
         product.price = 'banana';
         product.available = 7;
         chai.request(server)
-        .put(`/api/v1/products/${product.id}`)
+        .put(`/api/v1/products/${product._id}`)
         .send(product)
         .end((err, res) => {
           should.exist(err);
@@ -178,7 +255,7 @@ describe('product API V1 routes', () => {
       .end((err, res) => {
         var product = res.body.content[0];
         chai.request(server)
-        .delete(`/api/v1/products/${product.id}`)
+        .delete(`/api/v1/products/${product._id}`)
         .end((err, res) => {
           should.not.exist(err);
           res.redirects.length.should.eql(0);

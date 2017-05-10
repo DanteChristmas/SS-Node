@@ -1,5 +1,5 @@
 const config = {
-  version: 'V1',
+  version: 'v1',
   route: 'products',
   controller: 'ProductController'
 }

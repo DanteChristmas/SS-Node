@@ -13,7 +13,7 @@ function isSet(item){
 }
 
 function ApiRoutes(config) {
-    const controller = require(`../../controllers/api/${config.controller}`);
+    const controller = require(`../../controllers/api/${config.version}/${config.controller}`);
 
     const routeVersion = isSet(config.version) ? config.version + '/' : '';
 
