@@ -18,7 +18,7 @@ function find(req, res, next) {
     if(data.length > 0)
       handleResponse(res, 200, 'success', data[0], {});
     else {
-      let err = new Error('Not Found');
+      var err = new Error('Not Found');
       err.status = 404;
       next(err);
     }

@@ -5,7 +5,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin")
 module.exports = {
   context: __dirname,
   entry: {
-    // bootstrap: ['./stylesheets/bootstrap', 'webpack/hot/only-dev-server'],
+    cmsBootstrap: ['./cms/styles/bootstrap', 'webpack/hot/only-dev-server'],
     // home: ['./javascripts/pages/Home', 'webpack/hot/only-dev-server'],
     index: ['./cms/index', 'webpack/hot/only-dev-server'],
     devServerClient: 'webpack-dev-server/client?http://localhost:8080'
@@ -23,8 +23,8 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /(node_modules|server)/,
-        // loader: ExtractTextPlugin.extract("style-loader","css-loader!sass-loader")
-        loader: 'style-loader!css?sourceMap!sass?sourceMap'
+        loader: ExtractTextPlugin.extract({fallback: "style-loader", use: "css-loader!sass-loader"})
+        // loader: 'style-loader!css-loader?sourceMap!sass-loader?sourceMap'
 
       },
       { test: /\.woff$/,   loader: "url-loader?limit=10000&minetype=application/font-woff" },
@@ -38,18 +38,28 @@ module.exports = {
     ]
   },
   resolve: {
-    // alias: {
-    //   jsRoot: path.resolve(__dirname, 'app', 'assets', 'javascripts'),
-    //   jsReducers: path.resolve(__dirname, 'app', 'assets', 'javascripts', 'reducers'),
-    //   jsActions: path.resolve(__dirname, 'app', 'assets', 'javascripts', 'actions')
-    // },
+    alias: {
+      cmsStyles: path.resolve(__dirname, 'cms', 'styles')
+      // jsRoot: path.resolve(__dirname, 'app', 'assets', 'javascripts'),
+      // jsReducers: path.resolve(__dirname, 'app', 'assets', 'javascripts', 'reducers'),
+      // jsActions: path.resolve(__dirname, 'app', 'assets', 'javascripts', 'actions')
+    },
     extensions: ['.js', '.jsx', '.css', '.scss', '.png', '.jpg']
   },
   output: {
     path: __dirname + '/server/public/dist',
-    publicPath: 'http://localhost:8080/server/public/dist,
+    publicPath: 'http://localhost:8080/dist',
+    // headers: {"Access-Control-Allow-Origin": "http://localhost:3000", "Access-Control-Allow-Credentials": "true"},
     filename: '[name].js',
     chunkFilename: "[id].chunk.js"
+  },
+  devServer: {
+    headers: {
+     "Access-Control-Allow-Origin": "*",
+     "Access-Control-Allow-Credentials": "true",
+     "Access-Control-Allow-Headers": "Content-Type, Authorization, x-id, Content-Length, X-Requested-With",
+     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
+   }
   },
   plugins: [
     // new webpack.HotModuleReplacementPlugin(),

@@ -5,8 +5,6 @@ import App from './app';
 
 
 ReactDOM.render(
-  <div>
-    <App />
-  </div>,
-  document.getElementById('app')
+    <App />,
+  document.getElementById('root-element')
 );

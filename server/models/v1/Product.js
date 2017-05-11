@@ -1,9 +1,11 @@
+'use strict';
+
 const knex = require('../../db/connection.js');
 const uuid = require('uuid/v4');
 
 function query(req, res, next) {
   var sql = knex.select().from('products');
-  
+
   if(req.query.types)
     sql.andWhere({ type: req.query.types })
   if(req.query.available)
@@ -35,7 +37,7 @@ function find(req, res, next) {
     if(data.length > 0)
       handleResponse(res, 200, 'success', data[0], {});
     else {
-      let err = new Error('Not Found');
+      var err = new Error('Not Found');
       err.status = 404;
       next(err);
     }
