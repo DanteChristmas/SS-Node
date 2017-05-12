@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
+const CmsController = require('../controllers/CmsController');
 
 router.get('/admin', (req, res,next) => {
-  res.render('cms');
+  CmsController.index(req, res, next);
 });
 
 router.get('/', (req, res, next) => {

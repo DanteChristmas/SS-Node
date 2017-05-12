@@ -3,88 +3,46 @@
 const knex = require('../../db/connection.js');
 const uuid = require('uuid/v4');
 
-function query(req, res, next) {
+function query(options) {
   var sql = knex.select().from('products');
 
-  if(req.query.types)
-    sql.andWhere({ type: req.query.types })
-  if(req.query.available)
-    sql.andWhere({available: (req.query.available == 'true')})
-  if(req.query.min_price || req.query.max_price) {
-    if(req.query.min_price) {
-      if (req.query.max_price) {
-        sql.whereBetween('price', [req.query.min_price, req.query.max_price]);
+  if(options.types)
+    sql.andWhere({ type: options.types })
+  if(options.available)
+    sql.andWhere({available: (options.available == 'true')})
+  if(options.min_price || options.max_price) {
+    if(options.min_price) {
+      if (options.max_price) {
+        sql.whereBetween('price', [options.min_price, options.max_price]);
       } else {
-        sql.andWhere('price', '>=', req.query.min_price);
+        sql.andWhere('price', '>=', options.min_price);
       }
     } else {
-      sql.andWhere('price', '<=', req.query.max_price);
+      sql.andWhere('price', '<=', options.max_price);
     }
   }
 
 
-  sql.then((data) => {
-    handleResponse(res, 200, 'success', data , {});
-  })
-  .catch((err) => {
-    next(err);
-  });
+  return sql;
 }
 
-function find(req, res, next) {
-  knex.select().from('products').where({_id: req.params.id})
-  .then((data) => {
-    if(data.length > 0)
-      handleResponse(res, 200, 'success', data[0], {});
-    else {
-      var err = new Error('Not Found');
-      err.status = 404;
-      next(err);
-    }
-  })
-  .catch((err) => {
-    next(err);
-  });
+function find(id) {
+  return knex.select().from('products').where({_id: id});
 }
 
-function create(req, res, next) {
-  var newProduct = req.body;
+function create(newProduct) {
   newProduct._id = uuid();
-  knex('products').insert(newProduct)
-  .returning('*')
-  .then((data) => {
-    handleResponse(res, 200, 'success', data[0], {});
-  })
-  .catch((err) => {
-    next(err);
-  });
+  return knex('products').insert(newProduct).returning('*');
 }
 
-function update(req, res, next) {
-  var updateProduct = req.body;
+function update(updateProduct) {
   updateProduct.updated_at = new Date().toISOString();
-  knex('products').where({_id: req.body._id}).update(updateProduct)
-  .returning('*')
-  .then((data) => {
-    handleResponse(res, 200, 'success', data[0], {});
-  })
-  .catch((err) => {
-    next(err);
-  });
+  return knex('products').where({_id: updateProduct._id}).update(updateProduct).returning('*');
+
 }
 
-function del(req, res, next) {
-  knex.delete().from('products').where({ _id: req.params.id })
-  .then((data) => {
-    handleResponse(res, 200, 'success', { message: 'Delete Successful' }, {});
-  })
-  .catch((err) => {
-    next(err);
-  });
-}
-
-function handleResponse(res, code, statusMsg, data, meta) {
-  res.status(code).json({ status: statusMsg, content: data , meta: {} });
+function del(id) {
+  return knex.delete().from('products').where({ _id: id });
 }
 
 module.exports = {

@@ -7,7 +7,7 @@ module.exports = {
   entry: {
     cmsBootstrap: ['./cms/styles/bootstrap', 'webpack/hot/only-dev-server'],
     // home: ['./javascripts/pages/Home', 'webpack/hot/only-dev-server'],
-    index: ['./cms/index', 'webpack/hot/only-dev-server'],
+    cms: ['./cms/cms', 'webpack/hot/only-dev-server'],
     devServerClient: 'webpack-dev-server/client?http://localhost:8080'
   },
   // resolveLoader: {
