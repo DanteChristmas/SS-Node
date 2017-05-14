@@ -2,7 +2,13 @@ const Product = require('../models/v1/Product');
 
 function index(req, res, next) {
   Product.query({}).then((data) => {
-    res.render('cms', {products: data});
+    res.render('cms', {
+      initialState: {
+        productList: {
+          products: data
+        }
+      }
+    });
   })
   .catch((err) => {
     next(err);

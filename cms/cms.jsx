@@ -3,26 +3,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { compose, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import createSagaMiddleware, { END } from 'redux-saga';
 import { fromJS } from 'immutable';
 
+import configureStore from './store/configure-store';
+import { AppContainer } from './app';
 
-import App from './app';
+const initialState = fromJS(JSON.parse(document.getElementById('root-element').getAttribute('data-initial-state')));
+// const initialState = JSON.parse(document.getElementById('root-element').getAttribute('data-initial-state'));
 
-let initialState = fromJS(JSON.parse(document.getElementById('root-element').getAttribute('data-initial-state')));
-const sagaMiddleware = createSagaMiddleware();
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || composeEnhancers;
-const store = createStore(reducer, composeEnhancers(
-  applyMiddleware(sagaMiddleware)
-));
-store.runSaga = sagaMiddleware.run;
-store.close = () => store.dispatch(END);
-store.runSaga(rootSaga);
-
+const store = configureStore(initialState);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <AppContainer />
   </Provider>,
   document.getElementById('root-element')
 );
