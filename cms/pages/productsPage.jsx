@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ProductTable from '../components/productTable';
+
 export default class ProductsPage extends React.PureComponent {
   constructor(props) {
     console.log(props);
@@ -9,13 +11,7 @@ export default class ProductsPage extends React.PureComponent {
   render() {
     return (
       <div className="products-page-container">
-        <h1>This is the app right here.</h1>
-        <p>This is a p tag</p>
-        <ul>
-        {this.props.productList.get('products').map((product) =>
-          <li key={product.get('_id')}>{product.get('name')}</li>
-        )}
-        </ul>
+        <ProductTable products={this.props.productList.get('products')} />
       </div>
     )
   }

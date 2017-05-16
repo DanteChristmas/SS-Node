@@ -6,6 +6,7 @@ import * as actionCreators from './actions/root-actions';
 
 import ProductsPage from './pages/productsPage';
 import CustomersPage from './pages/customersPage';
+import Nav from './components/nav';
 
 
 export default class App extends React.Component {
@@ -17,8 +18,10 @@ export default class App extends React.Component {
     return (
       <BrowserRouter>
         <div>
+          <Nav />
           <Route exact path="/admin" component={(props, state, params) => <ProductsPage productList={this.props.productList} />} />
-          <Route path="/admin/customers" component={(props, state, params) => <CustomersPage />} />
+          <Route path="/admin/products" component={(props, state, params) => <ProductsPage productList={this.props.productList} />} />
+          <Route path="/admin/customers" component={(props, state, params) => <CustomersPage customerList={this.props.customerList} />} />
         </div>
       </BrowserRouter>
     )
@@ -27,7 +30,8 @@ export default class App extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    productList: state.get('productList')
+    productList: state.get('productList'),
+    customerList: state.get('customerList')
   }
 }
 
