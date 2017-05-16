@@ -1,7 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Route, BrowserRouter, Match, Miss, withRouter } from 'react-router-dom';
 
 import * as actionCreators from './actions/root-actions';
+
+import ProductsPage from './pages/productsPage';
+import CustomersPage from './pages/customersPage';
 
 
 export default class App extends React.Component {
@@ -11,15 +15,12 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div className="the-app">
-        <h1>This is the app right here.</h1>
-        <p>This is a p tag</p>
-        <ul>
-        {this.props.productList.get('products').map((product) =>
-          <li key={product.get('_id')}>{product.get('name')}</li>
-        )}
-        </ul>
-      </div>
+      <BrowserRouter>
+        <div>
+          <Route exact path="/admin" component={(props, state, params) => <ProductsPage productList={this.props.productList} />} />
+          <Route path="/admin/customers" component={(props, state, params) => <CustomersPage />} />
+        </div>
+      </BrowserRouter>
     )
   }
 }
