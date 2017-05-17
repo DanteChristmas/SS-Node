@@ -22,7 +22,6 @@ function query(options) {
     }
   }
 
-
   return sql;
 }
 
