@@ -39,8 +39,6 @@ function configureStoreDev(initialState) {
   store.close = () => store.dispatch(END);
   store.runSaga(rootSaga);
 
-  console.log(store.getState());
-
   return store;
 }
 

@@ -2,30 +2,15 @@
 
 const knex = require('../../db/connection.js');
 const uuid = require('uuid/v4');
+const apiUtils = require('../../utils/apiUtils');
 
 function query(options) {
-  var sql = knex.select().from('products');
-  const limit = options.limit || 50;
-  const skip = !!options.page ? (options.page - 1) * limit : null;
+  var sql = knex.select('*').from('products');
+  const limit = apiUtils.getLimit(options);
+  const offset = apiUtils.getOffset(options);
 
-  sql.limit(limit);
-  if(!!skip)
-    sql.offset(skip);
-  if(options.types)
-    sql.andWhere({ type: options.types })
-  if(options.available)
-    sql.andWhere({available: (options.available == 'true')})
-  if(options.min_price || options.max_price) {
-    if(options.min_price) {
-      if (options.max_price) {
-        sql.whereBetween('price', [options.min_price, options.max_price]);
-      } else {
-        sql.andWhere('price', '>=', options.min_price);
-      }
-    } else {
-      sql.andWhere('price', '<=', options.max_price);
-    }
-  }
+  sql = apiUtils.setKnexPage(sql, limit, offset);
+  sql = buildProductQuery(sql, options);
 
   return sql;
 }
@@ -33,21 +18,7 @@ function query(options) {
 function count(options) {
   var sql = knex.count('_id as total').from('products');
 
-  if(options.types)
-    sql.andWhere({ type: options.types })
-  if(options.available)
-    sql.andWhere({available: (options.available == 'true')})
-  if(options.min_price || options.max_price) {
-    if(options.min_price) {
-      if (options.max_price) {
-        sql.whereBetween('price', [options.min_price, options.max_price]);
-      } else {
-        sql.andWhere('price', '>=', options.min_price);
-      }
-    } else {
-      sql.andWhere('price', '<=', options.max_price);
-    }
-  }
+  sql = buildProductQuery(sql, options);
 
   return sql;
 }
@@ -69,6 +40,26 @@ function update(updateProduct) {
 
 function del(id) {
   return knex.delete().from('products').where({ _id: id });
+}
+
+function buildProductQuery(sql, options) {
+  if(options.types)
+    sql.andWhere({ type: options.types })
+  if(options.available)
+    sql.andWhere({available: (options.available == 'true')})
+  if(options.min_price || options.max_price) {
+    if(options.min_price) {
+      if (options.max_price) {
+        sql.whereBetween('price', [options.min_price, options.max_price]);
+      } else {
+        sql.andWhere('price', '>=', options.min_price);
+      }
+    } else {
+      sql.andWhere('price', '<=', options.max_price);
+    }
+  }
+
+  return sql;
 }
 
 module.exports = {

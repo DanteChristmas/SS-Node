@@ -1,8 +1,13 @@
 const knex = require('../../db/connection.js');
 const uuid = require('uuid/v4');
+const apiUtils = require('../../utils/apiUtils');
 
 function query(options) {
   var sql = knex.select().from('customers');
+  const limit = apiUtils.getLimit(options);
+  const offset = apiUtils.getOffset(options);
+
+  sql = apiUtils.setKnexPage(sql, limit, offset);
 
   return sql;
 }

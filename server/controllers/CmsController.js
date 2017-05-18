@@ -1,5 +1,6 @@
 const Product = require('../models/v1/Product');
 const Customer = require('../models/v1/Customer');
+const apiUtils = require('../utils/apiUtils');
 
 function index(req, res, next) {
   var products = new Promise((resolve, reject) => {
@@ -11,6 +12,16 @@ function index(req, res, next) {
     });
   });
 
+  var productMeta = new Promise((resolve, reject) => {
+    Product.count({}).then((data) => {
+      data = apiUtils.buildMeta(data[0], req.query);
+      resolve(data)
+    })
+    .catch((err) => {
+      reject(err);
+    })
+  });
+
   var customers = new Promise((resolve, reject) => {
     Customer.query({}).then((data) => {
       resolve(data);
@@ -20,14 +31,15 @@ function index(req, res, next) {
     });
   });
 
-  Promise.all([products, customers]).then((vals) => {
+  Promise.all([products, productMeta, customers]).then((vals) => {
     res.render('cms', {
       initialState: {
         productList: {
-          products: vals[0]
+          products: vals[0],
+          meta: vals[1]
         },
         customerList: {
-          customers: vals[1]
+          customers: vals[2]
         }
       }
     });

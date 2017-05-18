@@ -10,6 +10,11 @@ function setState(state, newState) {
     return state;
 }
 
+function setPage(state, page) {
+  console.log('change page Reducer: ' + page);
+  return state;
+}
+
 // function setPageState(state, pageState) {
 //   pageState = fromJS(pageState)
 //   return state.set('pageState', pageState)
@@ -95,6 +100,8 @@ export default function productList(state=Map(), action) {
   switch(action.type){
     case 'SET_STATE':
       return setState(state, action.state);
+    case 'SET_PRODUCT_PAGE':
+      return setPage(state, action.page);
     default: {
       return state;
     }
