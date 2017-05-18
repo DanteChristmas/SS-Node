@@ -1,6 +1,23 @@
 const uuid = require('uuid/v4');
+const faker = require('faker');
 
 exports.seed = function(knex, Promise) {
+  var customers = [];
+  const cust_size = 500;
+  for(let i = 0; i < cust_size; i++) {
+    let id = uuid();
+    customers.push({
+      _id: id,
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
+      company_name: faker.company.companyName(),
+      email: faker.internet.email(),
+      address_line_1: faker.address.streetAddress(),
+      address_line_2: faker.address.secondaryAddress(),
+      zip_code: faker.address.zipCode().split('-')[0]
+    });
+  }
+
   return knex('customers').del()
   .then(() => {
     const id = uuid();
@@ -85,6 +102,10 @@ exports.seed = function(knex, Promise) {
         last_name: 'zxvrea',
         email: 'weomem@email.com'
       })
+    );
+  }).then(() => {
+    return Promise.join(
+      knex('customers').insert(customers)
     );
   });
 };

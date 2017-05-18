@@ -1,8 +1,26 @@
 const Product = require('../../../models/v1/Product');
 
 function query(req, res, next) {
-  Product.query(req.query).then((data) => {
-    handleResponse(res, 200, 'success', data , {});
+  var meta = new Promise((resolve, reject) => {
+    Product.count(req.query).then((data) => {
+      resolve(data)
+    })
+    .catch((err) => {
+      reject(err);
+    })
+  });
+  var products = new Promise((resolve, reject) => {
+    query = Product.query(req.query).then((data) => {
+      resolve(data);
+    })
+    .catch((err) => {
+      reject(err);
+    });
+  });
+
+
+  Promise.all([products, meta]).then((vals) => {
+    handleResponse(res, 200, 'success', vals[0] , vals[1]);
   })
   .catch((err) => {
     next(err);
@@ -52,7 +70,7 @@ function del(req, res, next) {
 }
 
 function handleResponse(res, code, statusMsg, data, meta) {
-  res.status(code).json({ status: statusMsg, content: data , meta: {} });
+  res.status(code).json({ status: statusMsg, content: data, meta });
 }
 
 module.exports = {

@@ -1,6 +1,20 @@
 const uuid = require('uuid/v4');
+const faker = require('faker');
 
 exports.seed = function(knex, Promise) {
+  var products = [];
+  const product_size = 500;
+  for(let i = 0; i < product_size; i++) {
+    let id = uuid();
+    products.push({
+      _id: id,
+      type: 'STRAP',
+      available: Math.random() >= 0.5,
+      name: `Vintage Strap: ${i}`,
+      price: faker.finance.amount()
+    });
+  }
+
   return knex('products').del()
   .then(function () {
     const id  = uuid();
@@ -9,7 +23,7 @@ exports.seed = function(knex, Promise) {
         _id: id,
         name: 'strap 1',
         available: true,
-        price: 124.50
+        price: '124.50'
       })
     );
   })
@@ -132,6 +146,10 @@ exports.seed = function(knex, Promise) {
         name: 'Shirt',
         price: 20.00
       })
+    );
+  }).then(() => {
+    return Promise.join(
+      knex('products').insert(products)
     );
   });
 };

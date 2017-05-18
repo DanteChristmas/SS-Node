@@ -63,6 +63,7 @@
     "css-loader": "^0.28.1",
     "del": "^2.2.2",
     "extract-text-webpack-plugin": "^2.1.0",
+    "faker": "^4.1.0",
     "file-loader": "^0.11.1",
     "gulp": "^3.9.1",
     "gulp-batch": "^1.0.5",
