@@ -15,7 +15,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <BrowserRouter>
         <div>
@@ -38,6 +37,5 @@ function mapStateToProps(state) {
     customerList: state.get('customerList')
   }
 }
-console.log(actionCreators);
 
 export const AppContainer = connect(mapStateToProps, actionCreators)(App);

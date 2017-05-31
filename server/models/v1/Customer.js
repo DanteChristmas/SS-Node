@@ -5,7 +5,7 @@ const apiUtils = require('../../utils/apiUtils');
 function query(options) {
   var sql = knex.select().from('customers');
   const limit = apiUtils.getLimit(options);
-  const offset = apiUtils.getOffset(options);
+  const offset = apiUtils.getOffset(options, limit);
 
   sql = apiUtils.setKnexPage(sql, limit, offset);
 

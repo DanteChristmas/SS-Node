@@ -14,7 +14,7 @@ function getLimit(options) {
   return options.limit || 50;
 }
 
-function getOffset(options) {
+function getOffset(options, limit) {
   return !!options.page ? (options.page - 1) * limit : null;
 }
 

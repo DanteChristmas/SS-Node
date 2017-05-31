@@ -35,6 +35,7 @@ function index(req, res, next) {
     res.render('cms', {
       initialState: {
         productList: {
+          currOptions: { page: vals[1].current_page },
           products: vals[0],
           meta: vals[1]
         },

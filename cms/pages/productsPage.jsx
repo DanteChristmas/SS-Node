@@ -5,7 +5,6 @@ import Pager from '../components/pager';
 
 export default class ProductsPage extends React.PureComponent {
   constructor(props) {
-    console.log(props);
     super(props)
   }
 
