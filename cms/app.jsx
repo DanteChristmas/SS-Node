@@ -22,7 +22,7 @@ export default class App extends React.Component {
           <Nav />
           <Route exact path="/admin" component={(props, state, params) =>
             <ProductsPage productList={this.props.productList}
-                          setPage={this.props.setProductPage}/>
+                          setPage={this.props.fetchProductPage}/>
           } />
           <Route path="/admin/products" component={(props, state, params) => <ProductsPage productList={this.props.productList} />} />
           <Route path="/admin/customers" component={(props, state, params) => <CustomersPage customerList={this.props.customerList} />} />
