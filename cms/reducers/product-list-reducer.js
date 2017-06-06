@@ -1,5 +1,6 @@
-import { compose, combineReducers } from 'redux'
 import {Map, fromJS} from 'immutable'
+
+import * as constants from '../constants'
 
 function setPage(state, page) {
   return state.setIn(['currOptions', 'page'], page)
@@ -12,9 +13,9 @@ function setSearchResults(state, response) {
 
 export default function productList(state=Map(), action) {
   switch(action.type){
-    case 'SET_PRODUCT_PAGE':
+    case constants.SET_PRODUCT_PAGE:
       return setPage(state, action.page);
-    case 'PRODUCT_QUERY_SUCCESS':
+    case constants.PRODUCT_QUERY_SUCCESS:
       return setSearchResults(state, action.response)
     default: {
       return state;

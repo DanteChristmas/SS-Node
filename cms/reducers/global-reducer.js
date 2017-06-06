@@ -1,6 +1,8 @@
 import { compose, combineReducers } from 'redux'
 import {Map, fromJS} from 'immutable'
 
+import * as constants from '../constants'
+
 function setState(state, newState) {
   if(newState)
     return state.merge(newState);
@@ -15,9 +17,9 @@ function setRequestError(state, error) {
 
 export default function globalReducer(state=Map(), action) {
   switch(action.type){
-    case 'SET_STATE':
+    case constants.SET_STATE:
       return setState(state, action.state);
-    case 'SET_REQUEST_ERROR':
+    case constants.SET_REQUEST_ERROR:
       return setRequestError(state, action.error)
     default: {
       return state;

@@ -1,5 +1,6 @@
 import { takeLatest, call, select, put, fork } from 'redux-saga/effects'
 
+import * as constants from '../constants'
 import * as actions from '../actions/root-actions'
 import * as ProductRepo from '../repos/ProductRepo'
 
@@ -21,6 +22,6 @@ export function* executeQuery(){
 }
 
 export default function* productListSaga() {
-  yield takeLatest("FETCH_PRODUCT_PAGE", fetchPage)
-  yield takeLatest("EXECUTE_PRODUCT_QUERY", executeQuery)
+  yield takeLatest(constants.FETCH_PRODUCT_PAGE, fetchPage)
+  yield takeLatest(constants.QUERY_PRODUCTS, executeQuery)
 }

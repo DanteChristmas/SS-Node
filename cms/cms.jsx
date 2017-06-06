@@ -8,8 +8,18 @@ import { fromJS } from 'immutable';
 import configureStore from './store/configure-store';
 import { AppContainer } from './app';
 
-const initialState = fromJS(JSON.parse(document.getElementById('root-element').getAttribute('data-initial-state')));
-// const initialState = JSON.parse(document.getElementById('root-element').getAttribute('data-initial-state'));
+function buildIntialState(serverState) {
+  var initialState = serverState;
+
+  initialState.createProduct = {
+    errors: [],
+    product: {}
+  }
+
+  return initialState
+}
+
+const initialState = fromJS(buildIntialState(JSON.parse(document.getElementById('root-element').getAttribute('data-initial-state'))));
 
 const store = configureStore(initialState);
 
